@@ -1,71 +1,63 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HashPlugin = require('./plugins/hash-plugin');
+// const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
 
-const smp = new SpeedMeasurePlugin();
-
-module.exports = smp.wrap({
+module.exports = {
+  // 如果 mode 是 Production 会启动压缩插件
   mode: 'development',
   devtool: false,
-  entry: './src/index.js',
-  //   output: {
-  //     path: path.resolve(__dirname, 'dist'),
-  //     filename: '[name].js',
-  //     clean: true,
+  //   entry: {
+  //     main: ['./src/index1.js', './src/index2.js'],
+  //     vendor: ['lodash', 'jquery'],
   //   },
+  //   entry: {
+  //     main: './src/index.js',
+  //     vendor: ['lodash'],
+  //   },
+  entry: './src/index.js',
   output: {
-    path: path.resolve('build'),
-    filename: '[name].js',
-    library: 'calculator',
-    libraryExport: 'add',
-    libraryTarget: 'umd', // var、commonjs、commonjs2、umd
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    clean: true,
   },
-  // 配置如何查找源代码中的引入模块
-  resolve: {
-    // extensions: ['.js'],
-    // alias: {
-    //   bootstrap: path.resolve(
-    //     __dirname,
-    //     '/node_modules/bootstrap/dist/css/bootstrap.min.css'
-    //   ),
-    // },
-    // modules: ['my_modules', 'node_modules'],
-    // mainFields: ['style', 'main'], // 查找的是 package.json 中的字段
-    // mainFiles: ['style.js', 'index.js'], // 查找的是文件
-  },
-  // 指定如何查找 loader
-  resolveLoader: {
-    extensions: ['.js'],
-    alias: {},
-    modules: ['loaders', 'node_modules'],
-  },
+  //   optimization: {
+  //     minimize: true,
+  //     minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
+  //   },
   module: {
-    // 一般来说我们拿到模块后要分析里面的依赖的模块 import/require
-    // 一些模块我们知道它肯定没有依赖别的模块 jquery lodash，所以可以省这一步
-    noParse: /jquery|lodash/,
-    noParse(request) {
-      return /jquery|lodash/.test(request);
-    },
     rules: [
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
+      //   {
+      //     test: /\.(png|jpg|gif)$/i,
+      //     type: 'asset/resource',
+      //     generator: {
+      //       filename: 'images/[hash][ext]',
+      //     },
+      //   },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
+      //   minify: {
+      //     collapseWhitespace: true,
+      //     keepClosingSlash: true,
+      //     removeComments: true,
+      //     removeRedundantAttributes: true,
+      //     removeScriptTypeAttributes: true,
+      //     removeStyleLinkTypeAttributes: true,
+      //     useShortDoctype: true,
+      //   },
     }),
-    new webpack.IgnorePlugin({
-      // 目录的正则
-      contextRegExp: /moment$/,
-      // 请求的正则
-      resourceRegExp: /locale/,
-    }),
-    // new BundleAnalyzerPlugin(),
+    // new MiniCssExtractPlugin({
+    //   filename: 'css/[name].[contenthash].css',
+    // }),
+    // new HashPlugin(),
   ],
-});
+};

@@ -18,10 +18,17 @@
 //   },
 // };
 
-exports.add = (a, b) => {
-  return a + b;
-};
+// exports.add = (a, b) => {
+//   return a + b;
+// };
 
-exports.minus = (a, b) => {
-  return a - b;
-};
+// exports.minus = (a, b) => {
+//   return a - b;
+// };
+
+// import './index.css';
+
+console.log('index1');
+
+// import img from './img.png';
+// console.log(img);
