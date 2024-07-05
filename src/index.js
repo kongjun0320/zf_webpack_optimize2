@@ -28,7 +28,11 @@
 
 // import './index.css';
 
-console.log('index1');
+// console.log('index1');
 
 // import img from './img.png';
 // console.log(img);
+
+import('./one');
+import('./two');
+import('./three');

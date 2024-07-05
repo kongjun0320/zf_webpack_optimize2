@@ -23,6 +23,10 @@ module.exports = {
     filename: '[name].[contenthash].js',
     clean: true,
   },
+  optimization: {
+    moduleIds: 'natural', // deterministic
+    chunkIds: 'natural', // deterministic
+  },
   //   optimization: {
   //     minimize: true,
   //     minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
